@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>3D Canvas Presentation – Mujtaba Ghous</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #05060f;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color: white;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+section {
+  min-height: 120vh;
+  display: flex;
+  align-items: center;
+  padding: clamp(20px, 6vw, 120px);
+}
+
+.text {
+  max-width: 720px;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin-bottom: 14px;
+}
+
+p {
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  line-height: 1.6;
+  opacity: 0.9;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="c"></canvas>
+
+<div class="content">
+
+<section>
+  <div class="text">
+    <h1>Advanced Digital Communication Systems</h1>
+    <p>
+      Course presentation prepared by <strong>Mujtaba Ghous</strong><br>
+      École de technologie supérieure (ÉTS Montréal)
+    </p>
+    <p>
+      Instructor: <strong>Prof. George Kaddoum</strong><br>
+      This interactive 3D website replaces traditional slides
+      with a real-time animated experience.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="text">
+    <h2>Why a 3D Website?</h2>
+    <p>
+      Modern communication systems demand modern visualization.
+      This site uses procedural 3D animation, canvas rendering,
+      and scroll-based motion to deliver information naturally.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="text">
+    <h2>Topics Covered</h2>
+    <p>
+      • Wireless communication fundamentals<br>
+      • Advanced modulation & coding<br>
+      • MIMO systems & URLLC<br>
+      • Research-driven engineering mindset
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="text">
+    <h2>Thank You</h2>
+    <p>
+      This presentation demonstrates how engineering
+      and creativity combine in modern communication.
+    </p>
+  </div>
+</section>
+
+</div>
+
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+let w, h, t = 0;
+
+function resize() {
+  w = canvas.width = window.innerWidth * devicePixelRatio;
+  h = canvas.height = window.innerHeight * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+}
+resize();
+window.addEventListener("resize", resize);
+
+function draw() {
+  t += 0.01;
+  ctx.clearRect(0,0,w,h);
+
+  // background
+  const g = ctx.createLinearGradient(0,0,w,h);
+  g.addColorStop(0, "#1e3a8a");
+  g.addColorStop(1, "#020617");
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,w,h);
+
+  // waves
+  ctx.strokeStyle = "rgba(96,165,250,0.15)";
+  for (let i=0;i<80;i++) {
+    ctx.beginPath();
+    for (let x=0;x<w;x+=20) {
+      const y = h/2 + Math.sin(x*0.004 + t + i)*40 + i*4;
+      ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+// scroll → depth effect
+window.addEventListener("scroll", () => {
+  document.body.style.backgroundPositionY = -scrollY * 0.3 + "px";
+});
+</script>
+
+</body>
+</html>
