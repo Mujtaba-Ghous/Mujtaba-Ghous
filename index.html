@@ -3,694 +3,414 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Site – Mujtaba Ghous</title>
+  <title>MG • Site</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#050614;
-      --card:rgba(255,255,255,.08);
-      --line:rgba(255,255,255,.14);
-      --txt:#f8fafc;
-      --muted:rgba(248,250,252,.78);
-      --accent:#34d399;
-      --accent2:#60a5fa;
-      --accent3:#a78bfa;
-      --shadow: 0 28px 90px rgba(0,0,0,.75);
-      --r:22px;
+      --s: 0;                 /* scroll 0..1 */
+      --h: 220;               /* hue */
+      --bgA: hsla(var(--h), 90%, 55%, .45);
+      --bgB: hsla(calc(var(--h) + 90), 90%, 55%, .35);
+      --bgC: hsla(calc(var(--h) + 180), 90%, 55%, .30);
+      --ink: rgba(248,250,252,.92);
+      --muted: rgba(248,250,252,.72);
+      --line: rgba(255,255,255,.14);
+      --glass: rgba(255,255,255,.06);
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
     body{
       font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--txt);
-      background: var(--bg);
+      color: var(--ink);
+      background:#050614;
       overflow-x:hidden;
     }
 
-    /* Animated colorful background (not simple) */
-    body::before{
-      content:"";
+    /* LIVE background that changes continuously with scroll */
+    .bg{
       position:fixed;
-      inset:-60px;
+      inset:-80px;
+      z-index:0;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 10% 5%, rgba(96,165,250,.55), transparent 55%),
-        radial-gradient(circle at 85% 15%, rgba(167,139,250,.55), transparent 55%),
-        radial-gradient(circle at 20% 95%, rgba(52,211,153,.40), transparent 55%),
-        radial-gradient(circle at 90% 90%, rgba(251,146,60,.35), transparent 55%),
-        linear-gradient(120deg, rgba(30,41,59,.55), rgba(2,6,23,.85));
-      background-size: 180% 180%;
-      filter: blur(10px);
-      opacity:.9;
-      animation: bgShift 18s ease-in-out infinite alternate;
-      pointer-events:none;
-      z-index:0;
+        radial-gradient(900px 700px at calc(10% + var(--s)*60%) calc(15% + var(--s)*25%), var(--bgA), transparent 60%),
+        radial-gradient(900px 700px at calc(85% - var(--s)*50%) calc(20% + var(--s)*40%), var(--bgB), transparent 60%),
+        radial-gradient(900px 700px at calc(25% + var(--s)*30%) calc(90% - var(--s)*40%), var(--bgC), transparent 60%),
+        linear-gradient(120deg, rgba(2,6,23,.92), rgba(15,23,42,.75));
+      filter: blur(12px) saturate(120%);
+      transform: translate3d(0,0,0);
+      animation: breathe 8s ease-in-out infinite alternate;
+      opacity:.95;
     }
-    @keyframes bgShift{
-      0%{background-position: 0% 50%}
-      100%{background-position: 100% 40%}
+    @keyframes breathe{
+      from{transform: scale(1.00) translateY(0px)}
+      to{transform: scale(1.03) translateY(-10px)}
     }
 
-    /* Floating blobs */
-    .blob{
-      position:fixed;
-      border-radius:999px;
+    /* Subtle grain */
+    .grain{
+      position:fixed; inset:0;
       pointer-events:none;
-      z-index:0;
-      opacity:.20;
-      filter: blur(2px);
-      mix-blend-mode: screen;
-      animation: floaty 14s ease-in-out infinite alternate;
-    }
-    .b1{width:260px;height:260px;left:4%;top:12%;background:radial-gradient(circle,#22d3ee,transparent 60%)}
-    .b2{width:320px;height:320px;right:-8%;top:45%;background:radial-gradient(circle,#f97316,transparent 60%);animation-delay:2s}
-    .b3{width:220px;height:220px;left:38%;bottom:-12%;background:radial-gradient(circle,#a78bfa,transparent 60%);animation-delay:4s}
-    @keyframes floaty{
-      from{transform:translate3d(0,0,0)}
-      to{transform:translate3d(18px,-44px,0)}
+      z-index:1;
+      opacity:.08;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
     }
 
-    /* TOP BAR like your template */
+    /* Top bar + header (clean, modern) */
     .topbar{
-      position:sticky;
-      top:0;
-      z-index:50;
+      position:sticky; top:0; z-index:50;
       backdrop-filter: blur(16px);
-      background: rgba(10,12,30,.70);
-      border-bottom: 1px solid rgba(255,255,255,.12);
+      background: rgba(8,10,26,.62);
+      border-bottom:1px solid rgba(255,255,255,.10);
     }
     .topbar .row{
-      max-width:1180px;
-      margin:0 auto;
+      max-width:1200px; margin:0 auto;
       padding:10px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      font-size:.86rem;
-      color:rgba(255,255,255,.8);
-    }
-    .top-left{
-      display:flex;
-      gap:16px;
-      align-items:center;
-      flex-wrap:wrap;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; font-size:.86rem; color:rgba(255,255,255,.82);
     }
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 11px; border-radius:999px;
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.10);
     }
-    .social{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    .iconbtn{
-      width:32px;height:32px;
-      border-radius:10px;
-      display:grid;place-items:center;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
-      color:white;
-      text-decoration:none;
-      transition: transform .2s ease, background .2s ease;
-    }
-    .iconbtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.12)}
-
-    /* Main header */
     header{
-      position:sticky;
-      top:54px;
-      z-index:40;
+      position:sticky; top:52px; z-index:49;
       backdrop-filter: blur(16px);
-      background: rgba(6,8,22,.60);
-      border-bottom: 1px solid rgba(255,255,255,.12);
+      background: rgba(5,6,20,.55);
+      border-bottom:1px solid rgba(255,255,255,.10);
     }
     .nav{
-      max-width:1180px;
-      margin:0 auto;
+      max-width:1200px; margin:0 auto;
       padding:14px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
     }
     .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      display:flex; align-items:center; gap:12px;
+      font-weight:700; letter-spacing:.08em; text-transform:uppercase;
     }
-    .brand .mark{
-      width:40px;height:40px;border-radius:14px;
+    .mark{
+      width:42px; height:42px; border-radius:14px;
       background: linear-gradient(135deg, rgba(52,211,153,.95), rgba(96,165,250,.95));
-      box-shadow: 0 14px 30px rgba(0,0,0,.35);
+      box-shadow: 0 18px 40px rgba(0,0,0,.40);
     }
-    .menu{
-      display:flex;
-      gap:18px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:center;
-    }
-    .menu a{
-      color:rgba(255,255,255,.85);
+    nav a{
+      color:rgba(255,255,255,.86);
       text-decoration:none;
+      margin-left:16px;
       font-size:.92rem;
       position:relative;
+      white-space:nowrap;
     }
-    .menu a::after{
+    nav a::after{
       content:"";
-      position:absolute;
-      left:0;bottom:-6px;
-      width:0;height:2px;
-      background: linear-gradient(90deg, var(--accent2), var(--accent3));
+      position:absolute; left:0; bottom:-7px;
+      width:0; height:2px;
+      background: linear-gradient(90deg, rgba(96,165,250,.95), rgba(167,139,250,.95));
       transition: width .25s ease;
     }
-    .menu a:hover::after{width:100%}
+    nav a:hover::after{width:100%}
 
-    .cta{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
     .btn{
       border-radius:999px;
       padding:10px 16px;
       border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.08);
+      background: rgba(255,255,255,.07);
       color:white;
       text-decoration:none;
       font-size:.9rem;
+      display:inline-flex; align-items:center; gap:8px;
       transition: transform .2s ease, background .2s ease;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
     }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.12)}
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.11)}
     .btn.primary{
       border:none;
-      background: linear-gradient(135deg, var(--accent), #a3e635);
+      background: linear-gradient(135deg, #34d399, #a3e635);
       color:#06281b;
-      box-shadow: 0 18px 45px rgba(52,211,153,.25);
-      font-weight:600;
+      font-weight:700;
+      box-shadow: 0 18px 45px rgba(52,211,153,.20);
     }
 
     main{
-      position:relative;
-      z-index:1;
-      max-width:1180px;
-      margin:0 auto;
-      padding: 28px 18px 60px;
+      position:relative; z-index:10;
+      max-width:1200px; margin:0 auto;
+      padding: 26px 18px 80px;
     }
 
-    /* Hero like the template (left text + right image in circle) */
+    /* “Open” layout: no boxes around images; typography + spacing */
+    section{
+      padding: 54px 0;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
     .hero{
+      padding-top: 30px;
+      min-height: calc(100vh - 150px);
       display:grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
-      gap:26px;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 30px;
       align-items:center;
-      padding: 26px 0 10px;
-      min-height: calc(100vh - 140px);
     }
+    .kicker{letter-spacing:.28em;text-transform:uppercase;font-size:.8rem;color:rgba(255,255,255,.74)}
+    h1{
+      font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+      line-height:1.05;
+      margin: 14px 0 12px;
+    }
+    h1 span{
+      background: linear-gradient(90deg, rgba(96,165,250,.95), rgba(167,139,250,.95));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    p{color:var(--muted); line-height:1.7; font-size: clamp(1rem, 1.2vw, 1.15rem)}
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
 
-    .kicker{
-      letter-spacing:.28em;
-      text-transform:uppercase;
-      font-size:.8rem;
-      color:rgba(255,255,255,.72);
-    }
-    .hero h1{
-      font-size: clamp(2.2rem, 4.5vw, 3.6rem);
-      line-height:1.08;
-      margin:14px 0 12px;
-    }
-    .hero h1 span{
-      background: linear-gradient(90deg, var(--accent2), var(--accent3));
-      -webkit-background-clip: text;
-      background-clip:text;
-      color: transparent;
-    }
-    .lead{
-      color: var(--muted);
-      font-size: clamp(1rem, 1.2vw, 1.15rem);
-      line-height:1.65;
-      max-width: 64ch;
-    }
-    .hero-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:18px;
-    }
-
-    .hero-right{
-      display:grid;
-      place-items:center;
-      position:relative;
-    }
-    .circle-frame{
-      width:min(420px, 92vw);
-      aspect-ratio: 1/1;
-      border-radius:999px;
-      overflow:hidden;
-      border: 10px solid rgba(255,255,255,.14);
-      box-shadow: var(--shadow);
-      background: rgba(255,255,255,.06);
-      transform-style:preserve-3d;
-      transition: transform .25s ease;
-    }
-    .circle-frame img{
+    /* Images: OPEN (no frames), just clean sizing */
+    .openImg{
       width:100%;
-      height:100%;
-      object-fit:cover;
-      transform: scale(1.05);
-    }
-    .ring{
-      position:absolute;
-      width:min(520px, 110vw);
-      aspect-ratio:1/1;
-      border-radius:999px;
-      border: 2px solid rgba(255,255,255,.10);
-      inset:auto;
-      animation: spin 18s linear infinite;
-      opacity:.65;
-    }
-    @keyframes spin{
-      from{transform: rotate(0deg)}
-      to{transform: rotate(360deg)}
+      max-width: 420px;
+      height:auto;
+      display:block;
+      border-radius: 18px;
+      filter: drop-shadow(0 20px 45px rgba(0,0,0,.55));
+      transform: translateZ(0);
     }
 
-    /* Sections - “free” look (no forced rectangles) */
-    .section{
-      padding: 32px 0;
-    }
     .grid2{
       display:grid;
-      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
-      gap:22px;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
       align-items:start;
     }
 
-    .free-card{
-      background: rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius: var(--r);
-      padding: 18px;
-      box-shadow: 0 18px 55px rgba(0,0,0,.40);
-    }
-
-    .h2{
-      font-size: 1.55rem;
-      margin-bottom:10px;
-    }
-    .muted{color:var(--muted); line-height:1.65}
-
-    .mediaRow{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:12px;
-      align-items:center;
-    }
-    .logo{
-      height:46px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.92);
-      padding:8px 12px;
-      box-shadow: 0 14px 35px rgba(0,0,0,.35);
-    }
-
-    .gifGrid{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-    .gifGrid img{
-      width:100%;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 16px 40px rgba(0,0,0,.45);
-      display:block;
-      object-fit:cover;
-      aspect-ratio: 16/10;
-    }
-
-    /* Gallery */
-    .gallery{
-      display:grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-    .gitem{
-      border-radius:18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 16px 40px rgba(0,0,0,.45);
-      transform-style:preserve-3d;
-      transition: transform .2s ease;
-      cursor:pointer;
-    }
-    .gitem:hover{transform: translateY(-3px)}
-    .gitem img{
-      width:100%;
-      height:180px;
-      object-fit:cover;
-      display:block;
-    }
-
-    /* Scroll reveal */
-    .reveal{
-      opacity:0;
-      transform: translateY(22px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-    .reveal.on{
-      opacity:1;
-      transform:none;
-    }
-
-    /* Modal for images */
-    .modal{
+    /* Floating GIFs that move ALL OVER the website (no rectangles) */
+    .float-layer{
       position:fixed;
       inset:0;
-      background: rgba(0,0,0,.72);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:200;
-      opacity:0;
+      z-index:6;
       pointer-events:none;
-      transition: opacity .25s ease;
-      padding: 24px;
-    }
-    .modal.on{opacity:1; pointer-events:auto}
-    .modalBox{
-      max-width:min(980px, 92vw);
-      max-height: 92vh;
-      border-radius: 18px;
       overflow:hidden;
-      background:#07081a;
-      box-shadow: 0 30px 120px rgba(0,0,0,.85);
-      position:relative;
     }
-    .modalBox img{width:100%; height:auto; display:block; max-height:92vh; object-fit:contain}
-    .close{
+    .floater{
       position:absolute;
-      right:12px; top:10px;
-      width:38px; height:38px;
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.08);
-      color:white;
-      display:grid; place-items:center;
-      cursor:pointer;
+      width: 220px;
+      height: auto;
+      opacity: .95;
+      filter: drop-shadow(0 22px 40px rgba(0,0,0,.55));
+      transform: translate3d(0,0,0);
+      animation: drift var(--dur) linear infinite;
+    }
+    @keyframes drift{
+      0%   { transform: translate3d(-20vw, var(--y), 0) rotate(0deg) scale(var(--sc)); }
+      50%  { transform: translate3d(55vw, calc(var(--y) - 12vh), 0) rotate(6deg) scale(var(--sc)); }
+      100% { transform: translate3d(120vw, var(--y), 0) rotate(0deg) scale(var(--sc)); }
     }
 
+    /* Small hover wiggle on links */
+    a{transition: transform .15s ease}
+    a:hover{transform: translateY(-1px)}
+
     footer{
-      padding: 22px 0 10px;
-      color: rgba(255,255,255,.72);
+      padding: 26px 0 10px;
       text-align:center;
+      color: rgba(255,255,255,.72);
       font-size:.9rem;
+      border: none;
     }
 
     /* Responsive */
     @media (max-width: 980px){
-      .hero{grid-template-columns: 1fr; min-height:auto}
+      .hero{grid-template-columns:1fr}
       .grid2{grid-template-columns:1fr}
-      .gallery{grid-template-columns: repeat(2, minmax(0,1fr))}
-      .gifGrid{grid-template-columns: 1fr}
-      header{top:54px}
-    }
-    @media (max-width: 560px){
-      .menu{display:none}
-      .circle-frame{width: 92vw}
+      nav{display:none}
+      .floater{width: 180px}
     }
   </style>
 </head>
 
 <body>
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
+  <div class="bg"></div>
+  <div class="grain"></div>
 
-  <!-- Top bar -->
+  <!-- FLOATING GIFS (replace filenames with your exact repo names) -->
+  <div class="float-layer" id="floatLayer">
+    <!-- IMPORTANT: change these 3 src to match your exact GIF filenames -->
+    <img class="floater" src="birds.gif"  alt="GIF" style="--dur:18s;--y:18vh;--sc:1.05;">
+    <img class="floater" src="rabbit.gif" alt="GIF" style="--dur:22s;--y:52vh;--sc:.95;">
+    <img class="floater" src="runner.gif" alt="GIF" style="--dur:26s;--y:78vh;--sc:1.12;">
+  </div>
+
   <div class="topbar">
     <div class="row">
-      <div class="top-left">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
         <span class="pill">📍 Montréal, Québec</span>
         <span class="pill">🎓 UQAM / ÉTS</span>
+        <span class="pill">🌈 Design vivant (scroll)</span>
       </div>
-      <div class="social">
-        <a class="iconbtn" href="https://uqam.ca/" target="_blank" rel="noreferrer" title="UQAM">U</a>
-        <a class="iconbtn" href="https://www.etsmtl.ca/" target="_blank" rel="noreferrer" title="ÉTS">E</a>
-        <a class="iconbtn" href="#cours" title="Cours">📄</a>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+        <a class="btn" href="#prof">Professeur</a>
+        <a class="btn" href="#cours">PDF</a>
       </div>
     </div>
   </div>
 
-  <!-- Header / navbar -->
   <header>
     <div class="nav">
       <div class="brand">
         <div class="mark"></div>
-        <div>MG • Site</div>
+        <div>MG • site</div>
       </div>
 
-      <nav class="menu">
+      <nav>
         <a href="#prof">Professeur</a>
         <a href="#cours">Cours (PDF)</a>
         <a href="#parcours">Parcours</a>
         <a href="#quebec">Québec</a>
-        <a href="#galerie">Galerie</a>
+        <a href="#media">Médias</a>
       </nav>
 
-      <div class="cta">
-        <a class="btn" href="https://professeurs.uqam.ca/professeur/elghazi.lahcen/" target="_blank" rel="noreferrer">Profil du professeur</a>
-        <a class="btn primary" href="#cours">Ouvrir le PDF</a>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+        <a class="btn" href="https://professeurs.uqam.ca/professeur/elghazi.lahcen/" target="_blank" rel="noreferrer">Profil UQAM</a>
+        <a class="btn primary" href="cours.pdf" target="_blank" rel="noreferrer">📄 Ouvrir le PDF</a>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- HERO -->
     <section class="hero" id="home">
-      <div class="reveal">
-        <div class="kicker">SITE PERSONNEL • UNIVERSITÉ</div>
-        <h1>Bienvenue sur le site de <span>Mujtaba Ghous</span></h1>
-        <p class="lead">
-          Un site moderne, vivant et interactif (animations, galerie, GIFs) — créé pour présenter
-          mon parcours, mon contexte universitaire au Québec, et des repères culturels.
+      <div>
+        <div class="kicker">site personnel • université • interactif</div>
+        <h1>Bienvenue — <span>Mujtaba Ghous</span></h1>
+        <p>
+          Un site web moderne (pas une présentation) avec un fond qui change pendant le scroll, des médias,
+          et une expérience “vivante” (GIFs flottants).
         </p>
 
-        <div class="hero-actions">
+        <div class="actions">
           <a class="btn primary" href="#prof">Voir le professeur</a>
-          <a class="btn" href="#galerie">Voir la galerie</a>
-          <a class="btn" href="#cours">Lien vers le cours (PDF)</a>
+          <a class="btn" href="#cours">Voir le PDF</a>
+          <a class="btn" href="#media">Voir les images</a>
         </div>
       </div>
 
-      <div class="hero-right reveal">
-        <div class="ring"></div>
-        <div class="circle-frame" id="heroTilt">
-          <img src="mujtaba.jpg" alt="Photo de Mujtaba Ghous">
-        </div>
+      <div style="display:flex;justify-content:center">
+        <img class="openImg" src="mujtaba.jpg" alt="Photo de Mujtaba">
       </div>
     </section>
 
-    <!-- PROF -->
-    <section class="section" id="prof">
+    <section id="prof">
       <div class="grid2">
-        <div class="reveal">
-          <h2 class="h2">Professeur</h2>
-          <p class="muted">
-            <strong>Lahcen Elghazi</strong> — Professeur à l’<strong>École de langues</strong> (UQAM). :contentReference[oaicite:1]{index=1}
+        <div>
+          <h2 style="font-size:1.8rem;margin-bottom:10px;">Professeur</h2>
+          <p>
+            <strong>Lahcen Elghazi</strong> — Professeur à l’<strong>École de langues</strong> (UQAM).
+            Courriel : <strong>elghazi.lahcen@uqam.ca</strong> • Téléphone : <strong>(514) 987-3000 poste 6704</strong>.
+            Langues : Français, Arabe, bèrbère. 
           </p>
-          <p class="muted" style="margin-top:10px;">
-            Courriel : <a href="mailto:elghazi.lahcen@uqam.ca" style="color:#93c5fd;text-decoration:none;">elghazi.lahcen@uqam.ca</a><br>
-            Téléphone : (514) 987-3000 poste 6704<br>
-            Langues : Français, Arabe, bèrbère :contentReference[oaicite:2]{index=2}
-          </p>
-
-          <div class="mediaRow">
+          <div class="actions" style="margin-top:14px">
             <a class="btn" href="https://professeurs.uqam.ca/professeur/elghazi.lahcen/" target="_blank" rel="noreferrer">Ouvrir le profil officiel</a>
-            <span class="pill">UQAM • École de langues</span>
+            <a class="btn" href="#cours">Voir le plan de cours</a>
           </div>
         </div>
 
-        <div class="free-card reveal">
-          <h3 style="font-size:1.1rem;margin-bottom:8px;">Animations (GIF)</h3>
-          <p class="muted">Ajout d’images animées pour donner un style “vivant”.</p>
-          <div class="gifGrid">
-            <img src="birds.gif" alt="GIF oiseaux">
-            <img src="rabbit.gif" alt="GIF lapin surpris">
-            <img src="runner.gif" alt="GIF personnage 3D">
-          </div>
-          <p class="muted" style="margin-top:10px;font-size:.9rem;">
-            (Si un GIF ne s’affiche pas, vérifie le nom exact du fichier dans GitHub.)
-          </p>
+        <div style="display:flex;justify-content:center">
+          <img class="openImg" src="pq_logo.png" alt="Logo Parti Québécois" style="max-width:380px">
         </div>
       </div>
     </section>
 
-    <!-- COURS PDF -->
-    <section class="section" id="cours">
+    <section id="cours">
+      <h2 style="font-size:1.8rem;margin-bottom:10px;">Cours (PDF)</h2>
+      <p>
+        Clique pour ouvrir le document du cours dans un nouvel onglet :
+      </p>
+      <div class="actions" style="margin-top:14px">
+        <a class="btn primary" href="cours.pdf" target="_blank" rel="noreferrer">📄 Ouvrir le PDF</a>
+        <a class="btn" href="cours.pdf" download>⬇️ Télécharger</a>
+      </div>
+      <p style="margin-top:12px">
+        Le PDF est déjà accessible depuis ton site. :contentReference[oaicite:4]{index=4}
+      </p>
+    </section>
+
+    <section id="parcours">
       <div class="grid2">
-        <div class="reveal">
-          <h2 class="h2">Cours (PDF)</h2>
-          <p class="muted">
-            Clique ici pour ouvrir le document du cours dans un nouvel onglet :
-          </p>
-          <div class="mediaRow" style="margin-top:12px;">
-            <a class="btn primary" href="cours.pdf" target="_blank" rel="noreferrer">📄 Ouvrir le PDF</a>
-            <a class="btn" href="cours.pdf" download>⬇️ Télécharger</a>
-          </div>
-          <p class="muted" style="margin-top:10px;font-size:.9rem;">
-            Astuce : renomme le fichier exactement en <strong>cours.pdf</strong> dans ton repo.
+        <div>
+          <h2 style="font-size:1.8rem;margin-bottom:10px;">Parcours</h2>
+          <p>
+            Je suis étudiant à Montréal. Mes intérêts incluent les télécommunications, les réseaux sans fil
+            et l’apprentissage automatique.
           </p>
         </div>
-
-        <div class="free-card reveal">
-          <h3 style="font-size:1.1rem;margin-bottom:8px;">Liens utiles</h3>
-          <p class="muted" style="margin-bottom:10px;">
-            Accès rapide vers les institutions et ressources.
-          </p>
-          <div class="mediaRow">
-            <a class="btn" href="https://uqam.ca/" target="_blank" rel="noreferrer">UQAM</a>
-            <a class="btn" href="https://www.etsmtl.ca/" target="_blank" rel="noreferrer">ÉTS</a>
-            <a class="btn" href="#galerie">Galerie</a>
-            <a class="btn" href="#quebec">Québec</a>
-          </div>
+        <div style="display:flex;justify-content:center">
+          <img class="openImg" src="smith.png" alt="Michael Smith" style="max-width:420px">
         </div>
       </div>
     </section>
 
-    <!-- PARCOURS -->
-    <section class="section" id="parcours">
+    <section id="quebec">
       <div class="grid2">
-        <div class="reveal">
-          <h2 class="h2">Parcours</h2>
-          <p class="muted">
-            Je m’appelle <strong>Mujtaba Ghous</strong>. Je suis étudiant à Montréal.
-            Mes intérêts incluent les télécommunications, les réseaux sans fil et l’apprentissage automatique.
-          </p>
-          <p class="muted" style="margin-top:10px;">
-            Ce site est conçu comme un vrai site web (pas des “slides”), avec animations, sections fluides et galerie.
-          </p>
+        <div style="display:flex;justify-content:center">
+          <img class="openImg" src="rene.jpg" alt="René Lévesque" style="max-width:420px">
         </div>
-
-        <div class="free-card reveal" style="display:flex;align-items:center;gap:14px;">
-          <img src="mujtaba.jpg" alt="Mujtaba" style="width:120px;height:120px;border-radius:18px;object-fit:cover;border:1px solid rgba(255,255,255,.14);box-shadow:0 16px 35px rgba(0,0,0,.35);">
-          <div>
-            <div class="pill" style="margin-bottom:10px;">🎓 Étudiant • Montréal</div>
-            <div class="muted" style="font-size:.95rem;">
-              Sections, animations, et médias intégrés (PDF, GIF, images).
-            </div>
-          </div>
+        <div>
+          <h2 style="font-size:1.8rem;margin-bottom:10px;">Québec</h2>
+          <p>
+            Repères culturels et historiques : René Lévesque, la politique québécoise, et la culture universitaire.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- QUEBEC -->
-    <section class="section" id="quebec">
-      <div class="grid2">
-        <div class="free-card reveal">
-          <h2 class="h2">Québec</h2>
-          <p class="muted">
-            Quelques repères culturels et historiques (ex. René Lévesque, Parti Québécois).
-          </p>
-          <div class="mediaRow" style="margin-top:12px;">
-            <img class="logo" src="pq_logo.png" alt="Logo Parti Québécois">
-          </div>
-        </div>
-
-        <div class="free-card reveal" style="display:flex;gap:14px;align-items:center;">
-          <img src="rene.jpg" alt="René Lévesque" style="width:140px;height:170px;border-radius:18px;object-fit:cover;border:1px solid rgba(255,255,255,.14);">
-          <div>
-            <h3 style="font-size:1.1rem;margin-bottom:6px;">René Lévesque</h3>
-            <p class="muted" style="font-size:.95rem;">
-              Figure importante de la politique québécoise et du mouvement souverainiste.
-            </p>
-          </div>
-        </div>
+    <section id="media">
+      <h2 style="font-size:1.8rem;margin-bottom:10px;">Médias</h2>
+      <p>
+        Tes images (PNG/JPG) s’affichent en “open style” (sans cadres). Tes GIFs flottent au-dessus et se déplacent sur toute la page.
+      </p>
+      <div class="actions" style="margin-top:14px">
+        <a class="btn" href="#home">⬆️ Retour en haut</a>
       </div>
     </section>
 
-    <!-- GALERIE -->
-    <section class="section" id="galerie">
-      <div class="reveal">
-        <h2 class="h2">Galerie</h2>
-        <p class="muted">Clique sur une image pour l’ouvrir en grand.</p>
-      </div>
-
-      <div class="gallery reveal" id="gallery">
-        <div class="gitem"><img src="mujtaba.jpg" alt="Mujtaba"></div>
-        <div class="gitem"><img src="smith.png" alt="Michael Smith"></div>
-        <div class="gitem"><img src="rene.jpg" alt="René Lévesque"></div>
-        <div class="gitem"><img src="pq_logo.png" alt="PQ"></div>
-      </div>
-    </section>
-
-    <footer class="reveal">
+    <footer>
       Site web réalisé par <strong>Mujtaba Ghous</strong> • GitHub Pages
     </footer>
   </main>
 
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <div class="modalBox">
-      <button class="close" id="close">✕</button>
-      <img id="modalImg" src="" alt="Agrandissement">
-    </div>
-  </div>
-
   <script>
-    // Scroll reveal
-    const obs = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting) e.target.classList.add("on");
-      });
-    }, {threshold: 0.18});
-    document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+    // 1) Scroll-driven background changes (up/down) continuously
+    const root = document.documentElement;
+    function onScroll(){
+      const max = (root.scrollHeight - window.innerHeight) || 1;
+      const s = Math.min(1, Math.max(0, window.scrollY / max));
+      const hue = Math.round(210 + s * 160); // 210..370 wrap ok
+      document.body.style.setProperty("--s", s.toFixed(4));
+      document.body.style.setProperty("--h", String(hue));
+    }
+    window.addEventListener("scroll", onScroll, {passive:true});
+    onScroll();
 
-    // Simple 3D tilt for the hero image
-    const heroTilt = document.getElementById("heroTilt");
-    heroTilt.addEventListener("mousemove", (e)=>{
-      const r = heroTilt.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      heroTilt.style.transform = `rotateY(${x*14}deg) rotateX(${(-y)*14}deg) translateZ(10px)`;
-    });
-    heroTilt.addEventListener("mouseleave", ()=>{
-      heroTilt.style.transform = "rotateY(0deg) rotateX(0deg) translateZ(0)";
-    });
+    // 2) Make floaters react a bit to scroll (more “alive”)
+    const floatLayer = document.getElementById("floatLayer");
+    let lastY = 0;
+    window.addEventListener("scroll", ()=>{
+      const dy = window.scrollY - lastY;
+      lastY = window.scrollY;
+      floatLayer.style.transform = `translateY(${dy * -0.03}px)`;
+      clearTimeout(window.__ft);
+      window.__ft = setTimeout(()=> floatLayer.style.transform = "translateY(0px)", 80);
+    }, {passive:true});
 
-    // Gallery modal
-    const modal = document.getElementById("modal");
-    const modalImg = document.getElementById("modalImg");
-    const closeBtn = document.getElementById("close");
-
-    document.querySelectorAll(".gitem img").forEach(img=>{
-      img.addEventListener("click", ()=>{
-        modalImg.src = img.src;
-        modal.classList.add("on");
+    // 3) Debug: if a GIF filename is wrong, show it in console
+    document.querySelectorAll(".floater").forEach(img=>{
+      img.addEventListener("error", ()=>{
+        console.log("GIF NOT FOUND:", img.getAttribute("src"));
       });
     });
-
-    closeBtn.addEventListener("click", ()=> modal.classList.remove("on"));
-    modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.classList.remove("on"); });
   </script>
 </body>
 </html>
